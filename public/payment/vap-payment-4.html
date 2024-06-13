@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Zefaaf Payment</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="https://www.vapulus.com/favicon.ico" type="image/x-icon" />
+    <link href="https://getbootstrap.com/docs/3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://api.vapulus.com:1338/app/session/script?appId=80c799cf-95f4-4a27-a442-9e65d7a36e09"></script>
+    <style id="antiClickjack">
+        body {
+            display: none !important;
+        }
+    </style>
+    <style>
+        body {
+            min-height: 100vh;
+        }
+        
+        .paymentContent {
+            max-width: 90%;
+            width: 400px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            overflow: hidden;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        .paymentContent .paymentHeader {
+            display: block;
+            text-align: start;
+            background: #f0f3f5;
+            border-bottom: 1px solid #ccc;
+        }
+        
+        .paymentContent .paymentHeader img {
+            margin-top: 5px;
+            height: 40px;
+        }
+        
+        .paymentContent .container {
+            padding: 14px 20px;
+            max-width: 100%;
+        }
+        
+        .paymentContent .paymentHeader h1 {
+            font-size: 22px;
+            font-weight: 600;
+            margin: 0px;
+        }
+        
+        .paymentContent .form-group {
+            margin-bottom: 8px;
+            display: inline-block;
+            width: 100%;
+        }
+        
+        .paymentContent .col-md-8 {
+            width: 100%!important;
+        }
+        
+        .paymentContent .form-group .control-label {
+            font-size: 17px;
+            font-weight: 600;
+            text-align: end;
+        }
+        
+        .paymentContent .form-group>div>input,
+        .paymentContent iframe {
+            height: 48px;
+            width: 100%;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+        
+        .paymentContent .group {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .paymentContent .group .form-group {
+            width: calc(50% - 5px);
+        }
+        
+        .paymentContent .btn {
+            max-width: 100%;
+            min-width: 220px;
+            margin: auto;
+            display: block;
+            height: 44px;
+            font-size: 18px;
+            margin-top: 8px;
+            padding: 0px 10px 0px 10px;
+        }
+        
+        .paymentContent .btn.disabled {
+            padding: 0px 40px 0px 10px;
+        }
+        
+        .paymentContent .btn span {
+            height: 30px;
+            line-height: 30px;
+        }
+        
+        .paymentContent .disabled .loader {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #333;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+            float: left;
+        }
+        
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="paymentContent">
+        <section class="text-center paymentHeader">
+            <div class="container">
+                <h1 class="jumbotron-heading">Zefaaf Payment</h1>
+                <img src="https://www.zefaaf.net/public/front/imgs/logo.png" />
+            </div>
+        </section>
+        <div class="container" id="myPage">
+            <div class="row">
+                <div class="contents col-12">
+                    <fieldset>
+                        <div class="form-group">
+                            <label class="col-md-8 control-label" for="cardNumber"> : رقم البطاقة</label>
+                            <div class="col-md-8">
+                                <input type="text" id="cardNumber" class="form-control input-md" value="" readonly />
+                            </div>
+                        </div>
+                        <div class="group">
+                            <div class="form-group">
+                                <label class="col-md-8 control-label" for="cardMonth"> : شهر انتهاء الصلاحية</label>
+                                <div class="col-md-8">
+                                    <input type="text" id="cardMonth" class="form-control input-md" value="" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-8 control-label" for="cardYear"> : سنة انتهاء الصلاحية</label>
+                                <div class="col-md-8">
+                                    <input type="text" id="cardYear" class="form-control input-md" value="" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-8 control-label" for="cardCVC"> : كود التحقق</label>
+                            <div class="col-md-8">
+                                <input type="text" id="cardCVC" class="form-control input-md" value="" readonly />
+                            </div>
+                        </div>
+                    </fieldset>
+                    <button class="btn btn-primary " id="payButton" onclick="pay();">
+                        <div class="loader"></div>
+                        <span>الدفع</span>
+                    </button>
+                    <button class="btn btn-success" id="toggleBtn" onclick="toggle();">
+                        Disabled Pay Btn
+                    </button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        if (window.PaymentSession) {
+            PaymentSession.configure({
+                fields: {
+                    // ATTACH HOSTED FIELDS IDS TO YOUR PAYMENT PAGE FOR A CREDIT CARD
+                    card: {
+                        cardNumber: "cardNumber",
+                        securityCode: "cardCVC",
+                        expiryMonth: "cardMonth",
+                        expiryYear: "cardYear"
+                    }
+                },
+                callbacks: {
+                    initialized: function(err, response) {
+                        console.log("init....");
+                        console.log(err, response);
+                        console.log("/init.....");
+                        // HANDLE INITIALIZATION RESPONSE
+                    },
+                    formSessionUpdate: function(err, response) {
+                        console.log("update callback.....");
+                        console.log(err, response);
+                        console.log("/update callback....");
+                        if (response.statusCode) {
+                            if (200 == response.statusCode) {
+                                console.log("Session updated with data: " + response.data.sessionId);
+                                var xhr = new XMLHttpRequest();
+                                xhr.open("POST", "https://api.zefaaf.net/v1/mobile/vapPay", true);
+                                xhr.setRequestHeader('Content-Type', 'application/json');
+                                xhr.send(JSON.stringify({
+                                    'sessionId': response.data.sessionId
+                                }));
+                                xhr.onload = function() {
+                                    console.log("HELLO")
+                                    console.log(this.responseText);
+                                    var result = JSON.parse(this.responseText);
+                                    console.log(result['action']);
+                                    if (result['action'] == 'pending') {
+                                        console.log(result);
+                                        location.replace(result['paymentUrl']);
+                                    } else(result['action'] == 'accepted')
+                                        // console.log(result);
+                                    console.log('CAPTURED');
+                                    location.replace('https://api.zefaaf.net/thankyou.html');
+                                }
+
+                            } else if (201 == response.statusCode) {
+                                console.log("Session update failed with field errors.");
+
+                                if (response.message) {
+                                    var field = response.message.indexOf('valid')
+                                    field = response.message.slice(field + 5, response.message.length);
+                                    console.log(field + " is invalid or missing.");
+                                }
+                            } else {
+                                console.log("Session update failed: " + response);
+                            }
+                        }
+                    }
+                }
+            });
+        } else {
+            alert('Fail to get app/session/script !\n\nPlease check if your appId added in session script tag in head section?')
+        }
+
+        function pay() {
+            PaymentSession.updateSessionFromForm();
+        }
+
+        // toggle button function 
+        function toggle() {
+            console.log('Toggle Pay Btn');
+            var payBtn = document.getElementById("payButton");
+            payBtn.classList.toggle("disabled");
+        }
+    </script>
+</body>
+
+</html>

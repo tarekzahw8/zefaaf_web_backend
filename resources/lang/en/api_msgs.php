@@ -1,0 +1,25 @@
+<?php
+return[
+    
+    "Success"                           => "Success",
+    "Success Register"                  => "Your account has been registered successfully",
+    'check_credentials'			        =>  'Please verify your login data',
+    'can not create token'			    =>  'Can not create token',
+    'tweet created'			            =>  'Tweet has been created successfully',
+    'user followed'			            =>  'user has been followed successfully',
+    'followed already'			        =>  'You have already followed this user',
+    'not followed'			            =>  'You are not following this user',
+    'user unfollowed'			        =>  'Follow canceled successfully',
+    'wrong_password'			        =>  'The current password is incorrect',
+    'password_updated'			        =>  ' Password changed successfully ',
+    'page not exist'			        =>  ' Page not exist ',
+    'join successfully'			        =>  ' Successful subscription ',
+    'already subscribed'			    =>  ' You are already subscribed this package ',
+    'already subscribe free package'    =>  ' You have subscribed to the free package before ',
+    'you are not join this challenge'   =>  ' You are not join this mission ',
+    'finished successfully'             =>  ' Mission finished successfully',
+    'join challenge successfully'       =>  ' Mission joined successfully ',
+    'already joined'                    =>  ' You are already join this mission ',
+    'updated successfully'              =>  ' Updated Successfully ',
+    'email exists'                      =>  ' This E-mail is already exist',
+];
